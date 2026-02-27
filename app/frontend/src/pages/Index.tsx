@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import SqlEditor from '@/components/SqlEditor';
 import FlowChart from '@/components/FlowChart';
-import { parseSQL } from '@/lib/sqlParser';
+import { parseSQL, ParsedSQL } from '@/lib/sqlParser';
 import { buildFlowElements } from '@/lib/flowLayoutEngine';
 import type { Node, Edge } from 'reactflow';
 import { toast } from 'sonner';
@@ -12,10 +12,28 @@ export default function IndexPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [key, setKey] = useState(0);
 
-  const handleParse = useCallback((sql: string) => {
+  const handleParse = useCallback(async (sql: string) => {
     setIsLoading(true);
     try {
-      const parsed = parseSQL(sql);
+      // 优先尝试调用 Java 后端接口
+      let parsed: ParsedSQL;
+      try {
+        const response = await fetch('http://localhost:8080/api/parse', {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain' },
+          body: sql
+        });
+        
+        if (response.ok) {
+          parsed = await response.json();
+          console.log('Using Java Backend Result:', parsed);
+        } else {
+          throw new Error('Backend failed');
+        }
+      } catch (backendError) {
+        console.warn('Java backend unavailable, falling back to frontend parser:', backendError);
+        parsed = parseSQL(sql);
+      }
 
       if (parsed.allQueries.length === 0) {
         toast.error('无法解析SQL语句，请检查语法是否正确');

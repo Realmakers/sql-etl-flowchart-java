@@ -51,3 +51,8 @@ pnpm-lock.yaml
 *.pyc
 __pycache__
 node-v18.16.0-darwin-arm64/
+target/
+*.class
+*.jar
+*.war
+*.ear
