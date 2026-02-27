@@ -1,4 +1,4 @@
-# SQL流程图生成器Java版 (SQL to ETL Flowchart Generator-Java) 项目说明文档
+# SQL流程图生成器 (SQL to ETL Flowchart Generator) 项目说明文档
 
 ## 1. 项目背景
 
@@ -25,10 +25,10 @@
 ### 2.1 架构图
 ```mermaid
 graph TD
-    User[用户] --> Frontend[前端 (React + Vite)]
-    Frontend --> |HTTP POST /api/parse| Backend[后端 (Java Spring Boot)]
-    Backend --> |解析结果 JSON| Frontend
-    Frontend --> |降级方案: 本地正则解析| Frontend
+    User[用户] --> Frontend["前端 (React + Vite)"]
+    Frontend --> |HTTP POST /api/parse| Backend["后端 (Java Spring Boot)"]
+    Backend --> |"解析结果 JSON"| Frontend
+    Frontend --> |"降级方案: 本地正则解析"| Frontend
 ```
 
 ### 2.2 核心模块
@@ -48,7 +48,7 @@ graph TD
 
 项目根目录结构如下：
 
-```text
+```
 SQL流程图生成器_v11/
 ├── app/
 │   ├── backend/               # Java 后端项目
@@ -144,4 +144,3 @@ SQL流程图生成器_v11/
 *   **前端**：默认端口 `3005` (可在 `vite.config.ts` 中修改)。
 *   **后端**：默认端口 `8080` (可在 `app/backend/src/main/resources/application.properties` 中修改)。
 *   **代理**：前端通过 `/api` 路径自动转发请求到后端，无需处理跨域问题。
-
